@@ -1,0 +1,164 @@
+;; -*-Emacs-Lisp-*-
+(defun toggle-line-spacing ()
+  "Toggle line spacing between no extra space to extra half line height."
+  (interactive)
+  (if (eq line-spacing nil)
+      (setq-default line-spacing 0.5) ; add 0.5 height between lines
+    (setq-default line-spacing nil)))   ; no extra heigh between lines
+
+;; no beep
+(setq ring-bell-function (lambda () nil))
+
+;; easily install (and load) Emacs packages into ~/.emacs.d
+;; M-x package-install
+(load "package")
+(add-to-list 'package-archives '("elpa" . "http://tromey.com/elpa/"))
+(package-initialize)
+
+(menu-bar-mode 0)                   ;;; disable menu
+; (pc-selection-mode)
+(delete-selection-mode t)
+
+(toggle-truncate-lines)             ;;; do not wrap the long lines
+(setq backup-inhibited t)           ;;; disable backups
+(toggle-scroll-bar -1)              ;;; No scrollbar
+(tool-bar-mode -1)                  ;;; No toolbar
+(auto-compression-mode t)           ;;; Compress/uncompress .zip .gz files
+(setq inhibit-startup-message t)    ;;; No splash screen
+(setq scroll-conservatively 10)     ;;; enable usual scrolling
+(column-number-mode)                ;;; show column numbers
+;; (cua-mode t)                        ;;; Windows movement & selection
+;; (transient-mark-mode t)             ;;; No region when it is not highlighted
+;; (setq cua-keep-region-after-copy t) ;;; Standard Windows behaviour
+(setq show-paren-style 'mixed) ;;; highlight entire expression
+
+;;;; on windows use this in *scratch* buffer to select a font
+;;; (w32-select-font nil t)
+
+;(cond ((eq system-type 'darwin)
+;       (set-default-font
+;	 "-apple-dejavu sans mono-medium-r-normal--0-0-0-0-m-0-mac-roman"))
+;      ((eq system-type 'windows)
+;       (progn
+;	 (set-message-beep 'silent) ; no beep
+;	 (set-default-font
+;           "-adobe-courier-bold-r-normal--17-120-100-100-m-100-iso8859-1")))
+;      ((eq system-type 'gnu/linux)
+;       (progn
+;	 (set-background-color "beige")
+;         (set-default-font
+;           "-adobe-courier-bold-r-normal--25-180-100-100-m-150-iso8859-1")))
+;      (t nil))
+
+;; cl indentation rules are different from emacs lisp indentation
+;; rules. make certain you have the following code in a lisp mode hook
+;; in your .emacs file:
+(set (make-local-variable lisp-indent-function)
+     'common-lisp-indent-function)
+;; display matching parens
+(show-paren-mode)
+
+(setq inferior-lisp-program "clj.bat")
+;; (setq inferior-lisp-program "cljring.bat")
+
+(put 'downcase-region 'disabled nil)
+(global-set-key [f1] 'other-window) ; cycle through buffers
+(global-set-key [f2] 'save-buffer)             ; f2 save file
+(global-set-key [f3] 'find-file)               ; f3 open file
+(global-set-key [f4] 'other-window)            ; switch to other window
+(global-set-key [f6] 'slime-complete-symbol)   ; f6 complete symbol
+(global-set-key [f7] 'isearch-forward)         ; search
+(global-set-key [f8] 'lisp-eval-defun)         ; f8 eval a form under cursor
+(global-set-key (kbd "s-w") 'kill-this-buffer) ; apple-w     close the buffer
+(global-set-key "\C-y" 'kill-whole-line)       ; ^y   delete line
+(global-set-key "\C-z" 'undo)                  ;
+(global-set-key [f11] 'ibuffer)                ; f11  list of buffers
+(global-set-key [f12] 'toggle-line-spacing)    ; change spacing between lines
+(global-set-key (kbd "<C-tab>") 'other-window) ; cycle through buffers
+
+;; ^O switches to clojure window and back to the source
+(global-set-key [(control o)]
+		'(lambda ()
+		   (interactive)
+		   (if (string= "*inferior-lisp*" (buffer-name))
+		       (switch-to-buffer (other-buffer))
+		       (switch-to-buffer "*inferior-lisp*"))))
+
+(add-hook 'inferior-lisp-mode-hook
+          '(lambda()
+             (local-set-key [up] 'comint-previous-input)
+             (local-set-key [down] 'comint-next-input)))
+
+; (global-set-key  [f9] 'speedbar-get-focus)
+
+(autoload 'ibuffer "ibuffer" "List buffers." t)
+(setq ibuffer-shrink-to-minimum-size t)
+(setq ibuffer-always-show-last-buffer nil)
+(setq ibuffer-sorting-mode 'recency)
+(setq ibuffer-use-header-line t)
+(setq ibuffer-display-summary nil)
+(require 'ibuf-ext)
+
+; in dired, reuse the same buffer
+(put 'dired-find-alternate-file 'disabled nil)
+
+;; do not scroll beyond EOF
+(setq next-line-add-newlines nil)
+
+;; smaller indents in Clojure
+(setq lisp-indent-offset nil)
+
+;; changes yes/no questions to y/n
+(fset 'yes-or-no-p 'y-or-n-p)
+(put 'narrow-to-region 'disabled nil)
+
+(set-face-foreground 'show-paren-match-face "black")
+(set-face-background 'show-paren-match-face "lightgrey")
+
+;;-------
+(defun eshell-execute-selection ()
+  "Insert text of current selection or clipboard in eshell and execute."
+  (interactive)
+  (require 'eshell)
+  (let ((command (or (buffer-substring (mark) (point))
+		     x-last-selected-text-clipboard)))
+    (let ((buf (current-buffer))) 
+      (unless (get-buffer eshell-buffer-name)
+	(eshell))
+      (display-buffer eshell-buffer-name t)
+      (switch-to-buffer-other-window eshell-buffer-name)
+      (end-of-buffer)
+      (eshell-kill-input)
+      (insert command)
+      (eshell-send-input)
+      (end-of-buffer)
+      (switch-to-buffer-other-window buf))))
+
+(global-set-key [f10] 'eshell-execute-selection)
+;;-----
+
+;(custom-set-faces
+;  ;; custom-set-faces was added by Custom.
+;  ;; If you edit it by hand, you could mess it up, so be careful.
+;  ;; Your init file should contain only one such instance.
+;  ;; If there is more than one, they won't work right.
+; '(default ((t (:inherit nil :stipple nil :background "blue" :foreground "lightcyan" :inverse-video nil :box nil
+;			 :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 1 :width normal :foundry "default" :family "default"))))
+; '(font-lock-builtin-face ((((class color) (min-colors 16) (background dark)) (:foreground "lightcyan"))))
+; '(font-lock-comment-face ((((class color) (min-colors 16) (background dark)) (:foreground "cyan"))))
+; '(font-lock-doc-face ((t (:foreground "cyan"))))
+; '(font-lock-function-name-face ((((class color) (min-colors 88) (background light)) (:foreground "blue"))))
+; '(font-lock-keyword-face ((t (:foreground "white"))))
+; '(font-lock-string-face ((((class color) (min-colors 16) (background dark)) (:foreground "yellow"))))
+; '(highlight ((((class color) (min-colors 16) (background dark)) (:background "grey"))))
+; '(minibuffer-noticeable-prompt ((((class color) (min-colors 16) (background dark)) (:background "grey" :foreground "black"))))
+; '(mode-line ((t (:background "cyan" :foreground "black"))))
+; '(region ((((class color) (min-colors 16) (background dark)) (:background "cyan" :foreground "black")))))
+;(custom-set-variables
+;  ;; custom-set-variables was added by Custom.
+;  ;; If you edit it by hand, you could mess it up, so be careful.
+;  ;; Your init file should contain only one such instance.
+;  ;; If there is more than one, they won't work right.
+; '(safe-local-variable-values (quote ((Base . 10) (Package . CL-PPCRE-TEST) (Syntax . COMMON-LISP)))))
+
+(put 'erase-buffer 'disabled nil)
