@@ -1,0 +1,29 @@
+" --- Windows / Notepad Behaviors ---
+source $VIMRUNTIME/mswin.vim
+set mouse=a
+set selection=exclusive
+set selectmode=mouse,key
+set keymodel=startsel,stopsel
+
+" --- System Clipboard ---
+set clipboard=unnamed,unnamedplus
+
+" --- UI & Indent ---
+set number
+set nowrap
+set tabstop=4
+set shiftwidth=4
+set expandtab
+
+" --- Color Scheme ---
+set termguicolors
+set background=dark
+colorscheme rose-pine
+
+" Delete current line in Insert mode with Ctrl+Y
+inoremap <C-Y> <C-O>dd
+" Delete line in Normal mode
+nnoremap <C-Y> dd
+
+" Delete selected lines in Visual / Select mode
+vnoremap <C-Y> d
