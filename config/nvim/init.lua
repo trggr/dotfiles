@@ -61,8 +61,8 @@ do
   --  It is very similar to `vim.o` but offers an interface for conveniently interacting with tables.
   --   See `:help lua-options`
   --   and `:help lua-guide-options`
-  vim.o.list = true
-  vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+  -- vim.o.list = true
+  -- vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
   -- Preview substitutions live, as you type!
   vim.o.inccommand = 'split'
@@ -76,14 +76,7 @@ do
   vim.o.confirm = true
 end
 
--- ============================================================
--- SECTION 2: KEYMAPS & AUTOCMDS
--- basic keymaps, basic autocmds
--- ============================================================
 do
-  -- [[ Basic Keymaps ]]
-  --  See `:help vim.keymap.set()`
-
   -- Clear highlights on search when pressing <Esc> in normal mode
   --  See `:help hlsearch`
   vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -94,11 +87,17 @@ do
   vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-  vim.keymap.set('i', '<C-y>', '<C-o>dd', { desc = 'Delete current line and stay in insert mode' })
+  -- ^Y delete current line in any mode
+  vim.keymap.set('i', '<C-y>', '<Cmd>dd', { desc = 'Delete current line and stay in insert mode' })
+  vim.keymap.set('n', '<C-y>', 'dd', { desc = 'Delete current line' })
+
+  -- Save in all modes
+  vim.keymap.set('n', '<C-s>', ':w<CR>', { silent = true, desc = 'Save file' })
+  vim.keymap.set('i', '<C-s>', '<Cmd>w<CR>', { silent = true, desc = 'Save file and stay in insert mode' })
+  vim.keymap.set('v', '<C-s>', '<Cmd>w<CR>', { silent = true, desc = 'Save file' })
 
   vim.opt.termguicolors = true
 
   vim.cmd('colorscheme rose-pine')
-
 end
 
