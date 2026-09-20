@@ -1,14 +1,11 @@
-" --- Windows / Notepad Behaviors ---
 source $VIMRUNTIME/mswin.vim
 set mouse=a
 set selection=exclusive
 set selectmode=mouse,key
 set keymodel=startsel,stopsel
 
-" --- System Clipboard ---
 set clipboard=unnamed,unnamedplus
 
-" --- UI & Indent ---
 set number
 set nowrap
 set tabstop=4
@@ -16,13 +13,13 @@ set softtabstop=4
 set shiftwidth=4
 set expandtab
 
-" --- Color Scheme ---
 set termguicolors
 set background=dark
 colorscheme rose-pine
 
 " Delete current line in Insert mode with Ctrl+Y
 inoremap <C-Y> <C-O>dd
+
 " Delete line in Normal mode
 nnoremap <C-Y> dd
 
@@ -40,9 +37,45 @@ set nohlsearch
 set incsearch
 
 set scrolloff=8
+
 "vim.opt.signcolumn = "yes"
 "vim.opt.isfname:append("@-@")
 
 set updatetime=50
 set colorcolumn=80
-"
+
+" Enable top tabline automatically
+let g:airline#extensions#tabline#enabled = 1
+
+" Show open buffers as tabs across the top (VS Code style)
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#tabline#buffer_nr_show = 1
+
+" Show close buttons on tabs
+let g:airline#extensions#tabline#show_close_button = 1
+
+" --- Navigation Mappings ---
+" Alt+Right / Alt+Left to switch tabs
+nnoremap <A-Right> :bnext<CR>
+nnoremap <A-Left>  :bprevious<CR>
+
+" Close current buffer/tab with Ctrl+W
+nnoremap <C-W> :bdelete<CR>
+
+" Tell Netrw to open files in a new tab by default (target 3 = new tab page)
+let g:netrw_browse_split = 3
+
+" ============================================================================
+" NETRW (BUILT-IN FILE EXPLORER) SIDEBAR
+" ============================================================================
+let g:netrw_banner = 0          " Hide the top banner for a cleaner look
+let g:netrw_liststyle = 3       " Display files in a tree view
+let g:netrw_winsize = 25        " Set sidebar width to 25% of the screen
+let g:netrw_altv = 1            " Keep sidebar pinned on the left
+
+" Toggle the sidebar drawer with Ctrl+H
+nnoremap <silent> <C-H> :Lexplore<CR>
+
+" Fallback for terminals that map Ctrl+H to Backspace
+nnoremap <silent> <BS> :Lexplore<CR>
+
