@@ -88,9 +88,9 @@ do
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
   -- ^Y delete current line in any mode
-  vim.keymap.set('i', '<C-y>', '<Cmd>dd', { desc = 'Delete current line and stay in insert mode' })
+  vim.keymap.set('i', '<C-y>', '<C-o>dd', { desc = 'Delete current line and stay in insert mode' })
   vim.keymap.set('n', '<C-y>', 'dd', { desc = 'Delete current line' })
-
+  
   -- Save in all modes
   vim.keymap.set('n', '<C-s>', ':w<CR>', { silent = true, desc = 'Save file' })
   vim.keymap.set('i', '<C-s>', '<Cmd>w<CR>', { silent = true, desc = 'Save file and stay in insert mode' })
