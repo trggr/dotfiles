@@ -1,0 +1,18 @@
+[selection]
+save_to_clipboard = true
+
+[mouse]
+bindings = [
+  { mouse = "Right", action = "Paste" },
+]
+
+[keyboard]
+bindings = [
+  { key = "Insert", mods = "Control", action = "Copy" },
+  { key = "Insert", mods = "Shift", action = "Paste"},
+]
+
+[general]
+import = ["rose-pine.toml"]
+
+

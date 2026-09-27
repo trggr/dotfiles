@@ -1,7 +1,3 @@
--- ============================================================
--- SECTION 1: OPTIONS
--- Core Neovim settings, leaders, options
--- ============================================================
 do
   -- Enable faster startup by caching compiled Lua modules
   vim.loader.enable()
@@ -21,11 +17,11 @@ do
   -- Don't show the mode, since it's already in the status line
   vim.o.showmode = false
 
-  -- Force Neovim to load the official Windows behavior file
-  vim.cmd("source $VIMRUNTIME/mswin.vim")
-
   -- Recommended: Ensure Neovim shares the Windows system clipboard
   vim.opt.clipboard = "unnamedplus"
+
+  -- Force Neovim to load the official Windows behavior file
+  vim.cmd("source $VIMRUNTIME/mswin.vim")
 
   -- Sync clipboard between OS and Neovim.
   --  Schedule the setting after `UiEnter` because it can increase startup-time.
@@ -96,8 +92,13 @@ do
   vim.keymap.set('i', '<C-s>', '<Cmd>w<CR>', { silent = true, desc = 'Save file and stay in insert mode' })
   vim.keymap.set('v', '<C-s>', '<Cmd>w<CR>', { silent = true, desc = 'Save file' })
 
+  -- Fallback standard notation maps
+  vim.keymap.set("v", "<C-Insert>", '"+y', { noremap = true, silent = true })
+
   vim.opt.termguicolors = true
 
   vim.cmd('colorscheme rose-pine')
 end
+
+
 
