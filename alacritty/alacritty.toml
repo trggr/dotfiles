@@ -15,4 +15,9 @@ bindings = [
 [general]
 import = ["rose-pine.toml"]
 
+[cursor.style]
+shape = "Block"
+blinking = "Always" 
+
+
 

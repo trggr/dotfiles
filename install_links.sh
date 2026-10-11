@@ -7,4 +7,4 @@ ls -s ~/apps/dotfiles/config/i3/config              ~/.config/i3/config
 ls -s ~/apps/dotfiles/config/nvim/init.lua          ~/.config/nvim/init.lua
 ls -s ~/apps/dotfiles/screenlayout/auto-monitors.sh ~/.screenlayout/auto-monitors.sh
 ls -s ~/apps/dotfiles/vim/vimrc                     ~/.vim/vimrc
-
+ln -s ~/apps/dotfiles/config/i3status/config        ~/.config/i3status/config
