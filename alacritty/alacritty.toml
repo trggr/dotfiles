@@ -19,5 +19,8 @@ import = ["rose-pine.toml"]
 shape = "Block"
 blinking = "Always" 
 
+[font]
+size = 10.0
+
 
 
